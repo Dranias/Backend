@@ -1,22 +1,36 @@
 // app.js
-const sequelize = require('./Conexión/conexion'); // importa la instancia de sequelize
-const Productos = require('./Models/modeloProducto'); // importa el modelo de productos
-const Almacen = require('./Models/modeloAlmacen'); // importa el modelo almacen
-const Empleado = require('./Models/modeloEmpleado'); // importa el modelo almacen
-const EncabezadoVentas = require('./Models/modeloEncabezadoVentas'); // importa el modelo almacen
+const Productos = require('./Models/modeloProducto');
+const Stores = require('./Models/modeloStores');
+const Employees = require('./Models/modeloEmployees');
+const EncabezadoVentas = require('./Models/modeloEncabezadoVentas');
+const VentaDetalles = require('./Models/modeloventaDetalles');
+const Movimientos = require('./Models/modeloMovimientos');
+const Cancelaciones = require('./Models/modeloCancelaciones');
 
 Productos.findAll().then(productos => {
   console.log(productos);
 });
 
-/*Almacen.findAll().then(almacen => {
-  console.log(almacen);
-});*/
+Stores.findAll().then(stores => {
+  console.log(stores);
+});
 
-/*Empleado.findAll().then(empleado => {
-  console.log(empleado);
-});*/
+Employees.findAll().then(employees => {
+  console.log(employees);
+});
 
 EncabezadoVentas.findAll().then(encabezadoVentas => {
   console.log(encabezadoVentas);
+});
+
+VentaDetalles.findAll().then(ventaDetalles => {
+  console.log(ventaDetalles);
+});
+
+Movimientos.findAll().then(movimientos => {
+  console.log(movimientos);
+});
+
+Cancelaciones.findAll().then(cancelaciones => {
+  console.log(cancelaciones);
 });
