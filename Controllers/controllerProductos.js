@@ -2,15 +2,18 @@ const express = require('express');
 const router = express.Router();
 const Productos = require('../Models/modeloProducto');
 const Stores = require('../Models/modeloStores');
+const generarNumeroAleatorio = require('./generadorCodigos');
 
 // Agregar producto
 const agregarProducto = async (req, res) => {
   console.log("Entramos a agregarProducto");
 
   // Obtiene los datos del cuerpo de la solicitud
-  const { id, Marca, modelo, Tipo, identificador, precioPublico, precioDistribuidor, costo, cantidadAlmacen, localUno, localDos } = req.body;
+  const { Marca, modelo, Tipo, identificador, precioPublico, precioDistribuidor, costo, cantidadAlmacen, localUno, localDos } = req.body;
 
   try {
+    // Genera un número aleatorio de 13 dígitos.
+    const id = generarNumeroAleatorio();
     // Crea un nuevo producto en la tabla 'Productos'
     const producto = await Productos.create({ id, Marca, modelo, Tipo, identificador });
     console.log('Producto creado:', producto);
