@@ -60,8 +60,47 @@ const eliminarProducto = async (req, res) => {
   }
 };
 
-// Exporta las funciones
-module.exports = { agregarProducto: agregarProducto, eliminarProducto: eliminarProducto };
+// Modificar producto y almacenamiento
+const modificarProducto = async (req, res) => {
+  console.log("Entramos a modificarProducto");
+
+  // Obtiene el ID del producto de los parámetros de la solicitud
+  const { id } = req.params;
+
+  // Obtiene los datos del cuerpo de la solicitud
+  const { Marca, modelo, Tipo, identificador, precioPublico, precioDistribuidor, costo, cantidadAlmacen, localUno, localDos } = req.body;
+
+  try {
+    // Busca el producto en la tabla 'Productos'
+    const producto = await Productos.findOne({ where: { id } });
+    if (!producto) {
+      return res.status(404).send(`Producto con id ${id} no encontrado`);
+    }
+
+    // Actualiza los datos del producto
+    await producto.update({ Marca, modelo, Tipo, identificador });
+
+    // Busca el registro del almacén correspondiente en la tabla 'Stores'
+    const store = await Stores.findOne({ where: { idProducto: id } });
+    if (!store) {
+      return res.status(404).send(`Registro de almacenamiento para el producto con id ${id} no encontrado`);
+    }
+
+    // Actualiza los datos del almacenamiento
+    await store.update({ precioPublico, precioDistribuidor, costo, cantidadAlmacen, localUno, localDos });
+
+    // Devuelve una respuesta exitosa al cliente
+    res.status(200).send(`Producto con id ${id} modificado`);
+  } catch (err) {
+    // Si se produce un error, devuelve un mensaje de error al cliente
+    console.error(`Error al modificar Producto con id ${id}: `, err);
+    res.status(500).send(`Error al modificar Producto con id ${id}`);
+  }
+};
+
+// Exporta la función
+module.exports = { agregarProducto: agregarProducto, eliminarProducto: eliminarProducto, modificarProducto: modificarProducto };
+
 
 
 /* Agrega a producto

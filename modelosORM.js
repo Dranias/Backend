@@ -7,10 +7,16 @@ const VentaDetalles = require('./Models/modeloventaDetalles');
 const Movimientos = require('./Models/modeloMovimientos');
 const Cancelaciones = require('./Models/modeloCancelaciones');
 
+const generarNumeroAleatorio = require('./Controllers/generadorCodigos');
+
+console.log(generarNumeroAleatorio());
+
+
 Productos.findAll().then(productos => {
   console.log(productos);
 });
 
+/*
 Stores.findAll().then(stores => {
   console.log(stores);
 });
@@ -34,3 +40,4 @@ Movimientos.findAll().then(movimientos => {
 Cancelaciones.findAll().then(cancelaciones => {
   console.log(cancelaciones);
 });
+*/
