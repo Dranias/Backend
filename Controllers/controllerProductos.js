@@ -110,19 +110,7 @@ const obtenerProductos = async (req, res) => {
         attributes: ['precioPublico', 'precioDistribuidor', 'costo', 'cantidadAlmacen', 'localUno', 'localDos']
       }]
     });
-    /*
-    console.log(productosStore)
-    console.log(productosStore.id)
-    console.log(productosStore.Marca)
-    console.log(productosStore.modelo)
-    console.log(productosStore.identificador)
-    console.log(productosStore.precioPublico)
-    console.log(productosStore.precioDistribuidor)
-    console.log(productosStore.costo)
-    console.log(productosStore.cantidadAlmacen)
-    console.log(productosStore.localUno)
-    console.log(productosStore.localDos)
-    */
+    //NOTA: VER EN POSTMAN LO QUE SE MANDA, PORQUE CON console.log IMPRIME PURAS MAMADAS
     res.status(200).send(productosStore);
   } catch (err) {
     console.error('Error al obtener Productos: ', err);
