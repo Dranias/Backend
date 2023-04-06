@@ -1,5 +1,5 @@
-const express = require('express');
-const router = express.Router();
+/*const express = require('express');
+const router = express.Router();*/
 const Productos = require('../Models/modeloProducto');
 const Stores = require('../Models/modeloStores');
 const generarNumeroAleatorio = require('./generadorCodigos');
@@ -98,9 +98,40 @@ const modificarProducto = async (req, res) => {
   }
 };
 
-// Exporta la función
-module.exports = { agregarProducto: agregarProducto, eliminarProducto: eliminarProducto, modificarProducto: modificarProducto };
+// Obtener todos los productos
+const obtenerProductos = async (req, res) => {
+  console.log("Entramos a obtener productos");
+  try {
+    // Realiza join de las tablas 'Productos' y 'Stores'
+    const productosStore = await Productos.findAll({
+      attributes: ['Marca', 'modelo', 'Tipo', 'identificador'],
+      include: [{
+        model: Stores,
+        attributes: ['precioPublico', 'precioDistribuidor', 'costo', 'cantidadAlmacen', 'localUno', 'localDos']
+      }]
+    });
+    /*
+    console.log(productosStore)
+    console.log(productosStore.id)
+    console.log(productosStore.Marca)
+    console.log(productosStore.modelo)
+    console.log(productosStore.identificador)
+    console.log(productosStore.precioPublico)
+    console.log(productosStore.precioDistribuidor)
+    console.log(productosStore.costo)
+    console.log(productosStore.cantidadAlmacen)
+    console.log(productosStore.localUno)
+    console.log(productosStore.localDos)
+    */
+    res.status(200).send(productosStore);
+  } catch (err) {
+    console.error('Error al obtener Productos: ', err);
+    res.status(500).send('Error al obtener Productos');
+  }
+};
 
+// Exporta la función
+module.exports = { agregarProducto: agregarProducto, eliminarProducto: eliminarProducto, modificarProducto: modificarProducto,  obtenerProductos: obtenerProductos};
 
 
 /* Agrega a producto
