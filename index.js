@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const { agregarProducto, eliminarProducto, modificarProducto, obtenerProductos } = require('./Controllers/controllerProductos');
+const { agregarProducto, eliminarProducto, modificarProducto, obtenerProductos, buscarPorMarca } = require('./Controllers/controllerProductos');
 const Productos = require('./Models/modeloProducto');
 const Stores = require('./Models/modeloStores');
 
@@ -17,6 +17,9 @@ app.delete('/productos/:id', eliminarProducto);
 
 // Actualizar producto
 app.put('/productos/:id', modificarProducto);
+
+// Obtener productos por marca
+app.get('/productos/marca/:marca', buscarPorMarca);
 
 app.listen(3000, () => {
   console.log('Server listening on port 3000!');

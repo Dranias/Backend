@@ -1,13 +1,9 @@
-/*const express = require('express');
-const router = express.Router();*/
 const Productos = require('../Models/modeloProducto');
 const Stores = require('../Models/modeloStores');
 const generarNumeroAleatorio = require('./generadorCodigos');
 
 // Agregar producto
 const agregarProducto = async (req, res) => {
-  console.log("Entramos a agregarProducto");
-
   // Obtiene los datos del cuerpo de la solicitud
   const { Marca, modelo, Tipo, identificador, precioPublico, precioDistribuidor, costo, cantidadAlmacen, localUno, localDos } = req.body;
 
@@ -33,8 +29,6 @@ const agregarProducto = async (req, res) => {
 
 // Eliminar producto
 const eliminarProducto = async (req, res) => {
-  console.log("Entramos a eliminarProducto");
-
   // Obtiene el ID del producto de los parámetros de la solicitud
   const { id } = req.params;
 
@@ -62,8 +56,6 @@ const eliminarProducto = async (req, res) => {
 
 // Modificar producto y almacenamiento
 const modificarProducto = async (req, res) => {
-  console.log("Entramos a modificarProducto");
-
   // Obtiene el ID del producto de los parámetros de la solicitud
   const { id } = req.params;
 
@@ -100,7 +92,6 @@ const modificarProducto = async (req, res) => {
 
 // Obtener todos los productos
 const obtenerProductos = async (req, res) => {
-  console.log("Entramos a obtener productos");
   try {
     // Realiza join de las tablas 'Productos' y 'Stores'
     const productosStore = await Productos.findAll({
@@ -118,8 +109,32 @@ const obtenerProductos = async (req, res) => {
   }
 };
 
+const buscarPorMarca = async (req, res) => {
+  const { marca } = req.params;
+  try {
+    // Realiza join de las tablas 'Productos' y 'Stores'
+    const productosMarca = await Productos.findAll({
+      attributes: ['Marca', 'modelo', 'Tipo', 'identificador'],
+      include: [{
+        model: Stores,
+        attributes: ['precioPublico', 'precioDistribuidor', 'costo', 'cantidadAlmacen', 'localUno', 'localDos']
+      }],
+      where: {
+        Marca: marca
+      }
+    });
+    //NOTA: VER EN POSTMAN LO QUE SE MANDA, PORQUE CON console.log IMPRIME PURAS MAMADAS
+    res.status(200).send(productosMarca);
+  } catch (err) {
+    console.error('Error al obtener Productos por marca ', err);
+    res.status(500).send('Error al obtener Productos');
+  }
+};
+
 // Exporta la función
-module.exports = { agregarProducto: agregarProducto, eliminarProducto: eliminarProducto, modificarProducto: modificarProducto,  obtenerProductos: obtenerProductos};
+module.exports = { agregarProducto: agregarProducto, eliminarProducto: eliminarProducto, 
+                  modificarProducto: modificarProducto,  obtenerProductos: obtenerProductos,
+                  buscarPorMarca : buscarPorMarca};
 
 
 /* Agrega a producto
