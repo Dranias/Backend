@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
-const { agregarProducto, eliminarProducto, modificarProducto, obtenerProductos, buscarPorMarca, buscarPorMarcaYModelo } = require('./Controllers/controllerProductos');
+const { agregarProducto, eliminarProducto, modificarProducto, obtenerProductos, buscarPorMarca, 
+         buscarPorMarcaYModelo, buscarPorId } = require('./Controllers/controllerProductos');
 const Productos = require('./Models/modeloProducto');
 const Stores = require('./Models/modeloStores');
 
@@ -15,7 +16,10 @@ app.post('/productos', agregarProducto);
 // Eliminar producto
 app.delete('/productos/:id', eliminarProducto);
 
-// Actualizar producto
+// Obtener productos por id
+app.get('/productos/:id', buscarPorId);
+
+// Modificar productos
 app.put('/productos/:id', modificarProducto);
 
 // Obtener productos por marca

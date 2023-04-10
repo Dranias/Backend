@@ -108,6 +108,28 @@ const obtenerProductos = async (req, res) => {
   }
 };
 
+//Buscar productos por ID
+const buscarPorId = async (req, res) => {
+  const { id } = req.params;
+  try {
+    // Realiza join de las tablas 'Productos' y 'Stores'
+    const productosID = await Productos.findAll({
+      attributes: ['Marca', 'modelo', 'Tipo', 'identificador'],
+      include: [{
+        model: Stores,
+        attributes: ['precioPublico', 'precioDistribuidor', 'costo', 'cantidadAlmacen', 'localUno', 'localDos']
+      }],
+      where: {
+        ID: id
+      }
+    });
+    res.status(200).send(productosID);
+  } catch (err) {
+    console.error('Error al obtener Productos por marca ', err);
+    res.status(500).send('Error al obtener Productos');
+  }
+};
+
 //Buscar productos por Marca
 const buscarPorMarca = async (req, res) => {
   const { marca } = req.params;
@@ -156,7 +178,8 @@ const buscarPorMarcaYModelo = async (req, res) => {
 // Exporta la función
 module.exports = { agregarProducto: agregarProducto, eliminarProducto: eliminarProducto, 
                   modificarProducto: modificarProducto,  obtenerProductos: obtenerProductos,
-                  buscarPorMarca : buscarPorMarca, buscarPorMarcaYModelo: buscarPorMarcaYModelo};
+                  buscarPorMarca : buscarPorMarca, buscarPorMarcaYModelo: buscarPorMarcaYModelo,
+                  buscarPorId : buscarPorId};
 
 
 /* Agrega a producto
