@@ -1,21 +1,22 @@
 const Productos = require('../Models/modeloProducto');
 const Stores = require('../Models/modeloStores');
+const Existencias = require('../Models/modeloExistencias');
 const generarNumeroAleatorio = require('./generadorCodigos');
 
 // Agregar producto
 const agregarProducto = async (req, res) => {
   // Obtiene los datos
-  const { Marca, modelo, Tipo, identificador, precioPublico, precioDistribuidor, costo, cantidadAlmacen, localUno, localDos } = req.body;
+  const { marca, modelo, tipo, identificador, descripcionProducto, precioPublico, precioDistribuidor, costoProductos } = req.body;
 
   try {
     // Genera un número aleatorio de 13 dígitos que será el ID.
-    const id = generarNumeroAleatorio();
+    const idAleatorio = generarNumeroAleatorio();
     // Crea un nuevo producto en la tabla 'Productos'
-    const producto = await Productos.create({ id, Marca, modelo, Tipo, identificador });
-    console.log('Producto creado:', producto);
+    console.log(idAleatorio, marca, modelo, tipo, identificador);
+    const producto = await Productos.create({ idProducto: idAleatorio, marca, modelo, tipo, identificador, descripcionProducto });
 
     // Crea un nuevo registro en la tabla 'Stores' con el ID del producto recién creado
-    const store = await Stores.create({ idProducto: producto.id, precioPublico, precioDistribuidor, costo, cantidadAlmacen, localUno, localDos });
+    const store = await Stores.create({ idProducto: idAleatorio, precioPublico, precioDistribuidor, costoProductos });
     console.log('Almacén creado:', store);
 
     // Devuelve una respuesta exitos
@@ -39,6 +40,7 @@ const eliminarProducto = async (req, res) => {
       return res.status(404).send(`Producto con id ${id} no encontrado`);
     }
 
+    await Existencias.destroy({ where: { idProducto: id } });
     // Elimina el registro correspondiente en la tabla 'Stores'
     await Stores.destroy({ where: { idProducto: id } });
 
@@ -60,7 +62,7 @@ const modificarProducto = async (req, res) => {
   const { id } = req.params;
 
   // Obtiene los datos
-  const { Marca, modelo, Tipo, identificador, precioPublico, precioDistribuidor, costo, cantidadAlmacen, localUno, localDos } = req.body;
+  const { marca, modelo, tipo, identificador, precioPublico, precioDistribuidor, costoProductos } = req.body;
 
   try {
     // Busca el producto en la tabla 'Productos'
@@ -70,7 +72,7 @@ const modificarProducto = async (req, res) => {
     }
 
     // Actualiza los datos del producto
-    await producto.update({ Marca, modelo, Tipo, identificador });
+    await producto.update({ marca, modelo, tipo, identificador });
 
     // Busca el registro del almacén correspondiente en la tabla 'Stores'
     const store = await Stores.findOne({ where: { idProducto: id } });
@@ -79,7 +81,7 @@ const modificarProducto = async (req, res) => {
     }
 
     // Actualiza los datos del almacenamiento
-    await store.update({ precioPublico, precioDistribuidor, costo, cantidadAlmacen, localUno, localDos });
+    await store.update({ precioPublico, precioDistribuidor, costoProductos });
 
     // Devuelve una respuesta exitosa al cliente
     res.status(200).send(`Producto con id ${id} modificado`);
@@ -93,13 +95,19 @@ const modificarProducto = async (req, res) => {
 // Obtener todos los productos
 const obtenerProductos = async (req, res) => {
   try {
-    // Realiza join de las tablas 'Productos' y 'Stores'
+    // Realiza join de las tablas 'Productos', 'Stores' y 'Existencias'
     const productosStore = await Productos.findAll({
-      attributes: ['Marca', 'modelo', 'Tipo', 'identificador'],
-      include: [{
-        model: Stores,
-        attributes: ['precioPublico', 'precioDistribuidor', 'costo', 'cantidadAlmacen', 'localUno', 'localDos']
-      }]
+      attributes: ['idProducto', 'marca', 'modelo', 'tipo', 'identificador'],
+      include: [
+        {
+          model: Stores,
+          attributes: ['precioPublico', 'precioDistribuidor', 'costoProductos']
+        },
+        {
+          model: Existencias,
+          attributes: ['idSucursales', 'existenciaProdudcto']
+        }
+      ]
     });
     res.status(200).send(productosStore);
   } catch (err) {
@@ -114,10 +122,10 @@ const buscarPorId = async (req, res) => {
   try {
     // Realiza join de las tablas 'Productos' y 'Stores'
     const productosID = await Productos.findAll({
-      attributes: ['Marca', 'modelo', 'Tipo', 'identificador'],
+      attributes: ['marca', 'modelo', 'tipo', 'identificador'],
       include: [{
         model: Stores,
-        attributes: ['precioPublico', 'precioDistribuidor', 'costo', 'cantidadAlmacen', 'localUno', 'localDos']
+        attributes: ['precioPublico', 'precioDistribuidor', 'costoProductos']
       }],
       where: {
         ID: id
@@ -136,10 +144,10 @@ const buscarPorMarca = async (req, res) => {
   try {
     // Realiza join de las tablas 'Productos' y 'Stores'
     const productosMarca = await Productos.findAll({
-      attributes: ['Marca', 'modelo', 'Tipo', 'identificador'],
+      attributes: ['marca', 'modelo', 'tipo', 'identificador'],
       include: [{
         model: Stores,
-        attributes: ['precioPublico', 'precioDistribuidor', 'costo', 'cantidadAlmacen', 'localUno', 'localDos']
+        attributes: ['precioPublico', 'precioDistribuidor', 'costoProductos']
       }],
       where: {
         Marca: marca
@@ -158,10 +166,10 @@ const buscarPorMarcaYModelo = async (req, res) => {
   try {
     // Realiza join de las tablas 'Productos' y 'Stores'
     const productosMarcayModelo = await Productos.findAll({
-      attributes: ['Marca', 'modelo', 'Tipo', 'identificador'],
+      attributes: ['Marca', 'modelo', 'tipo', 'identificador'],
       include: [{
         model: Stores,
-        attributes: ['precioPublico', 'precioDistribuidor', 'costo', 'cantidadAlmacen', 'localUno', 'localDos']
+        attributes: ['precioPublico', 'precioDistribuidor', 'costoProductos']
       }],
       where: {
         Marca: marca,
@@ -180,39 +188,3 @@ module.exports = { agregarProducto: agregarProducto, eliminarProducto: eliminarP
                   modificarProducto: modificarProducto,  obtenerProductos: obtenerProductos,
                   buscarPorMarca : buscarPorMarca, buscarPorMarcaYModelo: buscarPorMarcaYModelo,
                   buscarPorId : buscarPorId};
-
-
-/* Agrega a producto
-app.post('/productos', async (req, res) => {
-  const { id, Marca, modelo, Tipo, identificador } = req.body;
-
-  try {
-    const producto = await Productos.create({ id, Marca, modelo, Tipo, identificador });
-
-    console.log('Product added to database!');
-    res.status(200).send('Product added to database');
-  } catch (err) {
-    console.error('Error adding product: ', err);
-    res.status(500).send('Error adding product');
-  }
-});
-*/
-
-/*
-En postman
-    {
-        "id": "LGSTY2MICVID",
-        "Marca": "LG",
-        "modelo": "STYLUS 2",
-        "Tipo": "MICA",
-        "identificador": "VIDRIO",
-        "precioPublico": 150.00,
-        "precioDistribuidor": 120.00,
-        "costo": 80.00,
-        "cantidadAlmacen": 50,
-        "localUno": 20,
-        "localDos": 30
-    }
-
-*/
-
