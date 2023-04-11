@@ -2,15 +2,15 @@ const Sequelize = require('sequelize');
 const sequelize = require('../Conexión/conexion.js'); // importa la instancia de sequelize
 
 const encabezadoVentas = sequelize.define('encabezadoVentas', {
-  folio: {
+  idFolioVenta: {
     type: Sequelize.INTEGER,
     primaryKey: true
   },
-  fecha: Sequelize.DATE,
-  importe: Sequelize.FLOAT,
-  utilidad: Sequelize.FLOAT,
-  local: Sequelize.STRING,
-  empleado: Sequelize.INTEGER,
+  fechaEncabezado: Sequelize.DATE,
+  importeEncabezado: Sequelize.FLOAT,
+  utilidadEncabezado: Sequelize.FLOAT,
+  idSucursales: Sequelize.STRING,
+  idEmpleado: Sequelize.INTEGER,
   numeroDistribuidor: Sequelize.STRING
 }, { 
   timestamps: false 

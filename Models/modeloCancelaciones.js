@@ -2,10 +2,7 @@ const Sequelize = require('sequelize');
 const sequelize = require('../Conexión/conexion.js'); // importa la instancia de sequelize
 
 const Cancelaciones = sequelize.define('cancelaciones', {
-  folioVenta: {
-    type: Sequelize.INTEGER,
-    primaryKey: true
-  },
+  idFolioVenta: Sequelize.INTEGER,
   idProducto: Sequelize.STRING,
   cantidad: Sequelize.INTEGER
 }, { 

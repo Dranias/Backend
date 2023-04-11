@@ -2,10 +2,7 @@ const Sequelize = require('sequelize');
 const sequelize = require('../Conexión/conexion.js'); // importa la instancia de sequelize
 
 const Movimientos = sequelize.define('movimientos', {
-  idProducto: {
-    type: Sequelize.STRING,
-    primaryKey: true
-  },
+  idProducto: Sequelize.STRING,
   tipoMovimiento: Sequelize.STRING,
   descripcionMovimiento: Sequelize.STRING,
   fechaMovimiento: Sequelize.DATE

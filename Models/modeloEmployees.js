@@ -6,12 +6,11 @@ const Employees = sequelize.define('employees', {
     type: Sequelize.INTEGER,
     primaryKey: true
   },
-  user: Sequelize.STRING,
-  password: Sequelize.STRING,
-  level: Sequelize.STRING,
+  idRoles: Sequelize.INTEGER,
   name: Sequelize.STRING,
   address: Sequelize.STRING,
-  phone: Sequelize.STRING
+  phone: Sequelize.STRING,
+  user: Sequelize.STRING
 }, { 
   timestamps: false 
 });
