@@ -16,8 +16,5 @@ const Stores = sequelize.define('stores', {
 
 Stores.hasMany(Productos, { foreignKey: 'idProducto', sourceKey: 'idProducto' });
 Productos.belongsTo(Stores, { foreignKey: 'idProducto', sourceKey: 'idProducto' });
-/*Productos.hasOne(Stores, { foreignKey: 'idProducto', sourceKey: 'idProducto' });
-Stores.belongsTo(Productos, { foreignKey: 'idProducto', targetKey: 'idProducto' });
-      ----    KUNG-FU-SION  ------  */
 
 module.exports = Stores;

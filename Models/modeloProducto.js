@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
-const sequelize = require('../Conexión/conexion.js'); // importa la instancia de sequelize
-const Existencias = require("./modeloExistencias.js");
+const sequelize = require('../Conexión/conexion'); // importa la instancia de sequelize
+const Existencias = require("./modeloExistencias");
 
 const Productos = sequelize.define('productos', {
   idProducto: {
@@ -16,7 +16,7 @@ const Productos = sequelize.define('productos', {
   timestamps: false 
 });
 
-Productos.hasMany(Existencias, { foreignKey: 'idProducto', sourceKey: 'idProducto' });
-Existencias.belongsTo(Productos, { foreignKey: 'idProducto', sourceKey: 'idProducto' });
+Productos.hasMany(Existencias, { foreignKey: 'idProducto' });
+Existencias.belongsTo(Productos, { foreignKey: 'idProducto' });
 
 module.exports = Productos;

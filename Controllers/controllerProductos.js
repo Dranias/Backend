@@ -105,7 +105,7 @@ const obtenerProductos = async (req, res) => {
         },
         {
           model: Existencias,
-          attributes: ['idSucursales', 'existenciaProdudcto']
+          attributes: ['idExistencias', 'idProducto', 'idSucursales', 'existenciaProdudcto']
         }
       ]
     });

@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../Conexión/conexion.js'); // importa la instancia de sequelize
+const Productos = require("./modeloProducto.js");
 
 const Existencias = sequelize.define('existencias', 
 {
